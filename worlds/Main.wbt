@@ -1,0 +1,118 @@
+#VRML_SIM R2022a utf8
+WorldInfo {
+}
+Viewpoint {
+  orientation -0.45632751967545904 0.3153993208897318 0.8320387389834318 2.0978112913443407
+  position 0.9668583964257919 -0.8444402138472729 1.9557558229873004
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  floorSize 2 1.5
+  floorTileSize 0.25 0.25
+}
+E-puck {
+  translation -0.21 0 0
+  name "e-puck(1)"
+  controller "heterogenous_robot"
+}
+E-puck {
+  translation -0.11 0 0
+  name "e-puck(2)"
+  controller "heterogenous_robot"
+}
+E-puck {
+  translation -0.01 0 0
+  name "e-puck(3)"
+  controller "heterogenous_robot"
+}
+E-puck {
+  translation 0.31 0 0
+  name "e-puck(4)"
+  controller "heterogenous_robot"
+}
+E-puck {
+  translation 0.41 -0.25 0
+  name "e-puck(5)"
+  controller "heterogenous_robot"
+}
+Ball {
+  translation 0.13 0 0.08
+  radius 0.08
+}
+Robot {
+  translation 0.68 0.38 0.15
+  children [
+    E-puck {
+      translation 0 0 -0.12
+    }
+    DEF BALL_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColor 0.564706 1 0.101961
+        roughness 0.3
+        metalness 0
+      }
+      geometry Sphere {
+        radius 0.03
+        subdivision 4
+      }
+    }
+  ]
+  name "ball(1)"
+  model "ball"
+  boundingObject USE BALL_SHAPE
+  physics Physics {
+    density -1
+    mass 0.055
+    centerOfMass [
+      0 0 -0.0001
+    ]
+    inertiaMatrix [
+      2.3e-05 2.3e-05 2.3e-05
+      0 0 0
+    ]
+    damping Damping {
+      linear 0.17
+      angular 0.33
+    }
+  }
+}
+Robot {
+  translation 0.63 -0.44 0.15
+  children [
+    E-puck {
+      translation 0 0 -0.12
+    }
+    DEF BALL_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColor 0.564706 1 0.101961
+        roughness 0.3
+        metalness 0
+      }
+      geometry Sphere {
+        radius 0.03
+        subdivision 4
+      }
+    }
+  ]
+  name "ball(2)"
+  model "ball"
+  boundingObject USE BALL_SHAPE
+  physics Physics {
+    density -1
+    mass 0.055
+    centerOfMass [
+      0 0 -0.0001
+    ]
+    inertiaMatrix [
+      2.3e-05 2.3e-05 2.3e-05
+      0 0 0
+    ]
+    damping Damping {
+      linear 0.17
+      angular 0.33
+    }
+  }
+}

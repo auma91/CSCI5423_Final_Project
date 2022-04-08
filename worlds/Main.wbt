@@ -3,7 +3,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.45632751967545904 0.3153993208897318 0.8320387389834318 2.0978112913443407
-  position 0.9668583964257919 -0.8444402138472729 1.9557558229873004
+  position 1.4857339807997327 -2.217712134979741 4.2587511293076075
 }
 TexturedBackground {
 }
@@ -13,34 +13,42 @@ RectangleArena {
   floorSize 2 1.5
   floorTileSize 0.25 0.25
 }
-E-puck {
-  translation -0.21 0 0
-  name "e-puck(1)"
-  controller "heterogenous_robot"
-}
-E-puck {
-  translation -0.11 0 0
-  name "e-puck(2)"
-  controller "heterogenous_robot"
-}
-E-puck {
-  translation -0.01 0 0
-  name "e-puck(3)"
-  controller "heterogenous_robot"
-}
-E-puck {
-  translation 0.31 0 0
-  name "e-puck(4)"
-  controller "heterogenous_robot"
-}
-E-puck {
-  translation 0.41 -0.25 0
-  name "e-puck(5)"
-  controller "heterogenous_robot"
-}
-Ball {
+Solid {
   translation 0.13 0 0.08
-  radius 0.08
+  children [
+    DEF BALL_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColor 1 0.54 0.08
+        roughness 0.3
+        metalness 0
+      }
+      geometry Sphere {
+        radius 0.08
+        subdivision 4
+      }
+    }
+  ]
+  name "ball"
+  model "ball"
+  boundingObject USE BALL_SHAPE
+  physics Physics {
+    density -1
+    mass 0.055
+    centerOfMass [
+      0 0 -0.0001
+    ]
+    inertiaMatrix [
+      2.3e-05 2.3e-05 2.3e-05
+      0 0 0
+    ]
+    damping Damping {
+      linear 0.17
+      angular 0.33
+    }
+  }
+  recognitionColors [
+    1 0.54 0.08
+  ]
 }
 Robot {
   translation 0.68 0.38 0.15
@@ -114,5 +122,17 @@ Robot {
       linear 0.17
       angular 0.33
     }
+  }
+}
+E-puck {
+  translation -0.2 0 0
+  controller "heterogenous_robot"
+  camera_fieldOfView 1.25
+  camera_width 128
+  camera_height 128
+  camera_recognition Recognition {
+    maxRange 50
+    maxObjects 5
+    frameColor 1 0.54 0.08
   }
 }

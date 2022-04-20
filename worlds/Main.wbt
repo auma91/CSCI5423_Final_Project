@@ -58,7 +58,7 @@ Robot {
       children [
         DEF BALL_SHAPE Shape {
           appearance PBRAppearance {
-            baseColor 0.192157 1 0.133333
+            baseColor 0.192 1 0.133
             roughness 0.3
             metalness 0
           }
@@ -111,7 +111,7 @@ Robot {
     }
   }
   recognitionColors [
-    0.192157 1 0.133333
+    0.192 1 0.133
   ]
 }
 Robot {
@@ -121,7 +121,7 @@ Robot {
       children [
         DEF BALL_SHAPE Shape {
           appearance PBRAppearance {
-            baseColor 0.192157 1 0.133333
+            baseColor 0.192 1 0.133
             roughness 0.3
             metalness 0
           }
@@ -174,13 +174,19 @@ Robot {
     }
   }
   recognitionColors [
-    0.192157 1 0.133333
+    0.192 1 0.133
+  ]
+  controllerArgs [
+    "False"
   ]
 }
 E-puck {
   translation -0.2 0 0
   name "Object Rollier"
   controller "heterogenous_robot"
+  controllerArgs [
+    "False"
+  ]
   camera_fieldOfView 1.25
   camera_width 128
   camera_height 128
@@ -191,7 +197,7 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
-    InertialUnit {
+    Compass {
     }
   ]
 }
@@ -199,6 +205,9 @@ E-puck {
   translation -0.1 0.24 0
   name "Object Rollier(1)"
   controller "heterogenous_robot"
+  controllerArgs [
+    "False"
+  ]
   camera_fieldOfView 1.25
   camera_width 128
   camera_height 128
@@ -209,7 +218,7 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
-    InertialUnit {
+    Compass {
     }
   ]
 }
@@ -217,6 +226,9 @@ E-puck {
   translation 0.13 0.31 0
   name "Object Rollier(2)"
   controller "heterogenous_robot"
+  controllerArgs [
+    "False"
+  ]
   camera_fieldOfView 1.25
   camera_width 128
   camera_height 128
@@ -227,7 +239,7 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
-    InertialUnit {
+    Compass {
     }
   ]
 }
@@ -235,6 +247,9 @@ E-puck {
   translation 0.33 0.24 0
   name "Object Rollier(3)"
   controller "heterogenous_robot"
+  controllerArgs [
+    "False"
+  ]
   camera_fieldOfView 1.25
   camera_width 128
   camera_height 128
@@ -245,7 +260,7 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
-    InertialUnit {
+    Compass {
     }
   ]
 }
@@ -253,6 +268,9 @@ E-puck {
   translation 0.4 -0.01 0
   name "Object Rollier(4)"
   controller "heterogenous_robot"
+  controllerArgs [
+    "False"
+  ]
   camera_fieldOfView 1.25
   camera_width 128
   camera_height 128
@@ -263,7 +281,7 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
-    InertialUnit {
+    Compass {
     }
   ]
 }
@@ -271,6 +289,9 @@ E-puck {
   translation 0.33 -0.22 0
   name "Object Rollier(5)"
   controller "heterogenous_robot"
+  controllerArgs [
+    "True"
+  ]
   camera_fieldOfView 1.25
   camera_width 128
   camera_height 128
@@ -281,7 +302,7 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
-    InertialUnit {
+    Compass {
     }
   ]
 }
@@ -289,6 +310,9 @@ E-puck {
   translation 0.12 -0.3 0
   name "Object Rollier(6)"
   controller "heterogenous_robot"
+  controllerArgs [
+    "False"
+  ]
   camera_fieldOfView 1.25
   camera_width 128
   camera_height 128
@@ -299,7 +323,7 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
-    InertialUnit {
+    Compass {
     }
   ]
 }
@@ -307,6 +331,9 @@ E-puck {
   translation -0.09 -0.24 0
   name "Object Rollier(7)"
   controller "heterogenous_robot"
+  controllerArgs [
+    "False"
+  ]
   camera_fieldOfView 1.25
   camera_width 128
   camera_height 128
@@ -317,7 +344,7 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
-    InertialUnit {
+    Compass {
     }
   ]
 }

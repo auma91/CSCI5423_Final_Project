@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5b4892b-8e00-4558-a797-2c5bc97d05a8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/heterogenous_robot.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/heterogenous_robot.py" beforeDir="false" afterPath="$PROJECT_DIR$/heterogenous_robot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../worlds/.Main.wbproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../worlds/.Main.wbproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../worlds/Main.wbt" beforeDir="false" afterPath="$PROJECT_DIR$/../../worlds/Main.wbt" afterDir="false" />
@@ -98,6 +93,7 @@
       <updated>1649446530722</updated>
       <workItem from="1649446534392" duration="4020000" />
       <workItem from="1650321514147" duration="6515000" />
+      <workItem from="1650824290302" duration="10226000" />
     </task>
     <servers />
   </component>

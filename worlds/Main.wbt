@@ -2,8 +2,8 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.0016475907237340083 0.9999959674173199 0.0023131350815591635 1.2395529724614054
-  position -0.7410695235666908 -0.04949129596769704 2.6216470511319816
+  orientation -0.0016481586310466425 0.9999972755012986 0.0016530466136798125 1.5695518835902202
+  position 0.24144021933614906 -0.011732478666664395 2.0924434769899407
 }
 TexturedBackground {
 }
@@ -15,7 +15,7 @@ RectangleArena {
   floorTileSize 0.25 0.25
 }
 Solid {
-  translation 0.13 0 0.08
+  translation 0.12 0 0.06
   children [
     DEF BALL_SHAPE Shape {
       appearance PBRAppearance {
@@ -24,7 +24,7 @@ Solid {
         metalness 0
       }
       geometry Sphere {
-        radius 0.08
+        radius 0.06
         subdivision 4
       }
     }
@@ -181,7 +181,7 @@ Robot {
   ]
 }
 E-puck {
-  translation -0.2 0 0
+  translation -0.1 -0.17 0
   name "Object Rollier"
   controller "heterogenous_robot"
   controllerArgs [
@@ -202,7 +202,7 @@ E-puck {
   ]
 }
 E-puck {
-  translation -0.1 0.24 0
+  translation -0.07 0.21 0
   name "Object Rollier(1)"
   controller "heterogenous_robot"
   controllerArgs [
@@ -223,29 +223,8 @@ E-puck {
   ]
 }
 E-puck {
-  translation 0.13 0.31 0
+  translation 0.24 0.26 0
   name "Object Rollier(2)"
-  controller "heterogenous_robot"
-  controllerArgs [
-    "False"
-  ]
-  camera_fieldOfView 1.25
-  camera_width 128
-  camera_height 128
-  camera_antiAliasing TRUE
-  camera_recognition Recognition {
-    maxRange 50
-    maxObjects 5
-    frameColor 1 0.54 0.08
-  }
-  groundSensorsSlot [
-    Compass {
-    }
-  ]
-}
-E-puck {
-  translation 0.33 0.24 0
-  name "Object Rollier(3)"
   controller "heterogenous_robot"
   controllerArgs [
     "False"
@@ -286,50 +265,8 @@ E-puck {
   ]
 }
 E-puck {
-  translation 0.33 -0.22 0
+  translation 0.26 -0.23 0
   name "Object Rollier(5)"
-  controller "heterogenous_robot"
-  controllerArgs [
-    "True"
-  ]
-  camera_fieldOfView 1.25
-  camera_width 128
-  camera_height 128
-  camera_antiAliasing TRUE
-  camera_recognition Recognition {
-    maxRange 50
-    maxObjects 5
-    frameColor 1 0.54 0.08
-  }
-  groundSensorsSlot [
-    Compass {
-    }
-  ]
-}
-E-puck {
-  translation 0.12 -0.3 0
-  name "Object Rollier(6)"
-  controller "heterogenous_robot"
-  controllerArgs [
-    "False"
-  ]
-  camera_fieldOfView 1.25
-  camera_width 128
-  camera_height 128
-  camera_antiAliasing TRUE
-  camera_recognition Recognition {
-    maxRange 50
-    maxObjects 5
-    frameColor 1 0.54 0.08
-  }
-  groundSensorsSlot [
-    Compass {
-    }
-  ]
-}
-E-puck {
-  translation -0.09 -0.24 0
-  name "Object Rollier(7)"
   controller "heterogenous_robot"
   controllerArgs [
     "False"

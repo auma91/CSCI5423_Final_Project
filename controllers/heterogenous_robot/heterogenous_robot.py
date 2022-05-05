@@ -2,8 +2,9 @@
 
 # You may need to import some classes of the controller module. Ex:
 #  from controller import Robot, Motor, DistanceSensor
-from controller import Robot, Camera, CameraRecognitionObject, Compass, InertialUnit
+from controller import Robot, Camera, CameraRecognitionObject, Compass, InertialUnit, GPS, Keyboard
 import math, sys
+import numpy as np
 # create the Robot instance.
 robot = Robot()
 
@@ -24,19 +25,25 @@ rightMotor = robot.getDevice('right wheel motor')
 compass = robot.getDevice("compass")
 compass.enable(timestep)
 
+gps = robot.getDevice("gps")
+gps.enable(timestep)
+
 camera = Camera("camera")
 camera.enable(timestep)
 camera.recognitionEnable(timestep)
+
+keyboard = robot.getKeyboard()
+keyboard.enable(timestep)
 
 leftMotor.setPosition(float('inf'))
 rightMotor.setPosition(float('inf'))
 leftSpeed, rightSpeed = 0, 0
 
 logging = False
-if len(sys.argv)> 1 and sys.argv[1] == "True":
+if len(sys.argv)> 1 and sys.argv[2] == "True":
     logging = True
 
-state_machine = {"intial360" : [False, None, None, None, None], "alignmentphase" : False, "aligned" : False, "isNearObject" : False, "searchingGoal" : False, "goalFindable" : [False, None],
+state_machine = {"initial360" : [False, None, None, None, None], "alignmentphase" : False, "aligned" : False, "isNearObject" : False, "searchingGoal" : [False, 0], "goalFindable" : [False, None],
                  "foundGoal" : [False, None, None, None]}
 
 deltaTheta = 0
@@ -51,6 +58,13 @@ pose_theta = rad
 
 deltaTheta = 0
 
+gpsCoordinates = []
+
+Trial = "9"
+
+def waitingTime(angularDistance):
+    return (-(8 * angularDistance)/(0.5 * math.pi)) + 8
+
 # Main loop:
 # - perform simulation steps until Webots is stopping the controller
 while robot.step(timestep) != -1:
@@ -60,10 +74,10 @@ while robot.step(timestep) != -1:
     n = compass.getValues()
     rad = -math.atan2(n[0], n[1])
     pose_theta = rad
-    if not state_machine["intial360"][0]:
+    if not state_machine["initial360"][0]:
         if deltaTheta == 0:
             previousTheta = pose_theta
-            deltaTheta += 0.000001
+            deltaTheta += 0.00000001
         else:
             deltaTheta += abs(abs(previousTheta) - abs(pose_theta))
             previousTheta = pose_theta
@@ -92,16 +106,13 @@ while robot.step(timestep) != -1:
                 pos_im = obj.get_position_on_image()
 
                 if colors == [1, 0.54, 0.08]:
-                    #found orange ball
-                    # state_machine["intial360"][1] = pose_theta
-
-                    if state_machine["intial360"][1] is None:
+                    if state_machine["initial360"][1] is None:
                         if logging:
                             print("found Orange ball")
                         if abs(pos_im[0] - camera.getWidth()/2) <= 1:
-                            state_machine["intial360"][1] = (pose_theta, objectPostion, pos_im)
+                            state_machine["initial360"][1] = (pose_theta, objectPostion, pos_im)
                             if logging:
-                                print("Orange ball in alignement: {}".format(state_machine["intial360"][1]))
+                                print("Orange ball in alignement: {}".format(state_machine["initial360"][1]))
                         # print("[{} == {}?={}, {} == {}?={}, and {} == {}?={}]".format(colors[0], 1, colors[0] == 1, colors[1],
                         #                                                               0.54, colors[1] == 0.54, colors[2], 0.08,
                         #                                                               colors[2] == 0.08))
@@ -124,8 +135,8 @@ while robot.step(timestep) != -1:
                             if abs(left_diff - right_diff) <= 2:
                                 if logging:
                                     print("Aligned 2 goals")
-                                state_machine["intial360"][2] = left
-                                state_machine["intial360"][3] = right
+                                state_machine["initial360"][2] = left
+                                state_machine["initial360"][3] = right
                     elif ballInView[0] and count==1:
                         left = greenVec[0] if greenVec[0][2][0] < ballInView[3][0] else (ballInView[1], ballInView[2], ballInView[3])
                         right = greenVec[0] if greenVec[0][2][0] > ballInView[3][0] else (ballInView[1], ballInView[2], ballInView[3])
@@ -141,25 +152,46 @@ while robot.step(timestep) != -1:
                             if abs(left_diff - right_diff) <= 2:
                                 if logging:
                                     print("Aligned 2 goals, with using object as goal estiamtion (occluded)")
-                                state_machine["intial360"][2] = left
-                                state_machine["intial360"][3] = right
+                                state_machine["initial360"][2] = left
+                                state_machine["initial360"][3] = right
                     else:
                         if logging:
                             print("# of goals found: {}, {}".format(len(greenVec), greenVec))
         else:
             leftSpeed = 0
             rightSpeed = 0
-            state_machine["intial360"][0] = True
+            state_machine["initial360"][0] = True
     elif not state_machine["alignmentphase"]:
-        if state_machine["intial360"][1][0] <= math.pi:
-            if math.isclose(state_machine["intial360"][1][0], pose_theta):
-
-            leftSpeed = 0.2 * MAX_SPEED
-            rightSpeed = -0.2 * MAX_SPEED
+        if state_machine["initial360"][1][0] < 0:
+            if logging:
+                print("Rotate counterclockwise")
+                print("current pose: {}, object pose: {}".format(pose_theta, state_machine["initial360"][1][0]))
+            if abs(pose_theta - state_machine["initial360"][1][0]) < 0.02:
+                leftSpeed, rightSpeed = 0,0
+                state_machine["alignmentphase"] = True
+            elif abs(pose_theta - state_machine["initial360"][1][0]) < math.pi/6:
+                leftSpeed = -0.1 * MAX_SPEED
+                rightSpeed = 0.1 * MAX_SPEED
+            elif pose_theta < state_machine["initial360"][1][0] or pose_theta > 0.1:
+                leftSpeed = 0.1 * MAX_SPEED
+                rightSpeed = -0.1 * MAX_SPEED
+            elif pose_theta > state_machine["initial360"][1][0]:
+                leftSpeed = -0.2 * MAX_SPEED
+                rightSpeed = 0.2 * MAX_SPEED
 
         else:
-            leftSpeed = 0.2 * MAX_SPEED
-            rightSpeed = -0.2 * MAX_SPEED
+            if logging:
+                print("Rotate Clockwise")
+                print("current pose: {}, object pose: {}".format(pose_theta, state_machine["initial360"][1][0]))
+            if abs(pose_theta - state_machine["initial360"][1][0]) < 0.015:
+                leftSpeed, rightSpeed = 0, 0
+                state_machine["alignmentphase"] = True
+            elif pose_theta > state_machine["initial360"][1][0]:
+                leftSpeed = -0.1 * MAX_SPEED
+                rightSpeed = 0.1 * MAX_SPEED
+            elif pose_theta < state_machine["initial360"][1][0]:
+                leftSpeed = 0.2 * MAX_SPEED
+                rightSpeed = -0.2 * MAX_SPEED
     elif not state_machine["aligned"]:
         cameraRecogObjects = camera.getRecognitionObjects()
         for obj in cameraRecogObjects:
@@ -196,69 +228,121 @@ while robot.step(timestep) != -1:
             colors = obj.get_colors()
             if colors == [1, 0.54, 0.08]:
                 objectPostion = obj.get_position()
-                if objectPostion[0] <= 0.055:
+                if objectPostion[0] <= 0.08:
                     state_machine["isNearObject"] = True
                     leftSpeed = 0
                     rightSpeed = 0
-                    state_machine["searchingGoal"] = True
+                    state_machine["searchingGoal"][0] = True
+                    angularDistance = 0
+                    if np.sign(pose_theta) == np.sign(state_machine["initial360"][2][0]):
+                        angularDistance = abs(pose_theta - state_machine["initial360"][2][0])
+                        # state_machine["searchingGoal"] =
+                    else:
+                        if pose_theta < 0:
+                            angularDistance = min(-pose_theta + state_machine["initial360"][2][0],
+                                                  (math.pi + pose_theta) + (math.pi - state_machine["initial360"][2][0]))
+                        else:
+                            angularDistance = min((math.pi - pose_theta) + (math.pi + state_machine["initial360"][2][0]),
+                                                  -state_machine["initial360"][2][0] + pose_theta)
+                    state_machine["searchingGoal"][1] = waitingTime(angularDistance)
                     deltaTheta = 0
                     if logging:
                         print("epuck is at ball")
                 # print("Object position: {}".format(objectPostion))
-    elif state_machine["searchingGoal"]:
+    elif state_machine["searchingGoal"][0]:
         # Green RGB
         # 0.192 1 0.133
-        if deltaTheta == 0:
-            previousTheta = pose_theta
-            deltaTheta += 0.0001
-        else:
-            deltaTheta += abs(abs(previousTheta) - abs(pose_theta))
-            previousTheta = pose_theta
+
         if logging:
-            print("Current angle: {}, current amount of rotation: {}".format(pose_theta, deltaTheta))
-        if deltaTheta >= 2 * math.pi:
-            leftSpeed = 0
-            rightSpeed = 0
-            state_machine["searchingGoal"] = False
-            currentTime1 = robot.getTime()
-            if logging:
-                print("Goal findable: {}".format(state_machine["goalFindable"][0]))
+            print("current angle: {}, goal angle: {}".format(pose_theta, state_machine['initial360'][2][0]))
+        if abs(pose_theta - state_machine["initial360"][2][0]) > 0.02:
+            currentTime1 = None
+            if np.sign(pose_theta) == np.sign(state_machine["initial360"][2][0]):
+                # within same hemisphere
+                if pose_theta > state_machine["initial360"][2][0]:
+                    leftSpeed = -0.1 * MAX_SPEED
+                    rightSpeed = 0.1 * MAX_SPEED
+                else:
+                    leftSpeed = 0.1 * MAX_SPEED
+                    rightSpeed = -0.1 * MAX_SPEED
 
+            else:
+                if pose_theta < 0:
+                    if -pose_theta + state_machine["initial360"][2][0] < (math.pi + pose_theta) + (math.pi - state_machine["initial360"][2][0]):
+                        leftSpeed = 0.1 * MAX_SPEED
+                        rightSpeed = -0.1 * MAX_SPEED
+                    else:
+                        leftSpeed = -0.1 * MAX_SPEED
+                        rightSpeed = 0.1 * MAX_SPEED
+                else:
+                    if (math.pi - pose_theta) + (math.pi + state_machine["initial360"][2][0]) < -state_machine["initial360"][2][0] + pose_theta:
+                        leftSpeed = 0.1 * MAX_SPEED
+                        rightSpeed = -0.1 * MAX_SPEED
+                    else:
+                        leftSpeed = -0.1 * MAX_SPEED
+                        rightSpeed = 0.1 * MAX_SPEED
         else:
-            leftSpeed = -0.05 * MAX_SPEED
-            rightSpeed = 0.05 * MAX_SPEED
-            cameraRecogObjects = camera.getRecognitionObjects()
-            # list of all objects detected
-            for obj in cameraRecogObjects:
-                # pos = i.get_position()
-                # x,y,z
-                colors = obj.get_colors()
-                pos_im = obj.get_position_on_image()
-
-                if colors == [0.192, 1, 0.133]:
-                    if 0 <= deltaTheta <= math.pi / 2:
-                        state_machine["foundGoal"][1] = "left"
-                        state_machine["foundGoal"][2] = pose_theta
-                        if logging:
-                            print("found left goal")
-
-                    elif math.pi/2 <= deltaTheta <= 3 * math.pi/2:
-                        state_machine["foundGoal"][1] = "behind"
-                        state_machine["foundGoal"][2] = pose_theta
-                        if logging:
-                            print("found behind goal")
-                    elif 3 * math.pi/2 <= deltaTheta:
-                        state_machine["foundGoal"][1] = "right"
-                        state_machine["foundGoal"][2] = pose_theta
-                        if logging:
-                            print("found right goal")
-                    state_machine["foundGoal"][0] = True
-                    state_machine["searchingGoal"] = False
-                    currentTime1 = robot.getTime()
+            leftSpeed = rightSpeed = 0
+            if currentTime1 == None:
+                currentTime1 = robot.getTime()
+            else:
                 if logging:
-                    print("finding goal: ", colors, pos_im)
+                    print("Time elapsed: {}, need to wait: {}".format(robot.getTime() - currentTime1, state_machine["searchingGoal"][1]))
+                if robot.getTime() - currentTime1 > state_machine["searchingGoal"][1]:
+                    leftSpeed = rightSpeed = 0.1 * MAX_SPEED
 
-    elif not state_machine["searchingGoal"]:
+        # else:
+        #     if deltaTheta == 0:
+        #         previousTheta = pose_theta
+        #         deltaTheta += 0.0001
+        #     else:
+        #         deltaTheta += abs(abs(previousTheta) - abs(pose_theta))
+        #         previousTheta = pose_theta
+        #     if logging:
+        #         print("Current angle: {}, current amount of rotation: {}".format(pose_theta, deltaTheta))
+        #     if deltaTheta >= 2 * math.pi:
+        #         leftSpeed = 0
+        #         rightSpeed = 0
+        #         state_machine["searchingGoal"] = False
+        #         currentTime1 = robot.getTime()
+        #         if logging:
+        #             print("Goal findable: {}".format(state_machine["goalFindable"][0]))
+        #
+        #     else:
+        #         leftSpeed = -0.05 * MAX_SPEED
+        #         rightSpeed = 0.05 * MAX_SPEED
+        #         cameraRecogObjects = camera.getRecognitionObjects()
+        #         # list of all objects detected
+        #         for obj in cameraRecogObjects:
+        #             # pos = i.get_position()
+        #             # x,y,z
+        #             colors = obj.get_colors()
+        #             pos_im = obj.get_position_on_image()
+        #
+        #             if colors == [0.192, 1, 0.133]:
+        #                 if 0 <= deltaTheta <= math.pi / 2:
+        #                     state_machine["foundGoal"][1] = "left"
+        #                     state_machine["foundGoal"][2] = pose_theta
+        #                     if logging:
+        #                         print("found left goal")
+        #
+        #                 elif math.pi/2 <= deltaTheta <= 3 * math.pi/2:
+        #                     state_machine["foundGoal"][1] = "behind"
+        #                     state_machine["foundGoal"][2] = pose_theta
+        #                     if logging:
+        #                         print("found behind goal")
+        #                 elif 3 * math.pi/2 <= deltaTheta:
+        #                     state_machine["foundGoal"][1] = "right"
+        #                     state_machine["foundGoal"][2] = pose_theta
+        #                     if logging:
+        #                         print("found right goal")
+        #                 state_machine["foundGoal"][0] = True
+        #                 state_machine["searchingGoal"] = False
+        #                 currentTime1 = robot.getTime()
+        #             if logging:
+        #                 print("finding goal: ", colors, pos_im)
+                    #
+    elif not state_machine["searchingGoal"][0]:
         if state_machine["foundGoal"][0]:
             leftSpeed = 0
             rightSpeed = 0
@@ -291,33 +375,15 @@ while robot.step(timestep) != -1:
             else:
                 leftSpeed = 0.1 * MAX_SPEED
                 rightSpeed = 0.1 * MAX_SPEED
-
+    if np.random.rand() < 0.25:
+        gpsCoordinates.append(gps.getValues()[0:2])
+    if keyboard.getKey() == ord('S'):
+        np.save("./output/" + sys.argv[1] + "_" + Trial + ".npy", gpsCoordinates)
+        print("Map file saved: {}.npy".format(sys.argv[1] + "_" + Trial))
 
     leftMotor.setVelocity(leftSpeed)
     rightMotor.setVelocity(rightSpeed)
 
-
-
-    # angles = Inertialun.getRollPitchYaw()
-    #
-    # print("Angle: {}".format(angles))
-    #
-    #
-    # counter += 1
-    # if counter % 10:
-    #     print(timestep)
-    #     x = camera.getImage()
-    #     y = camera.getRecognitionObjects()
-    #     #list of all objects detected
-    #     for i in y:
-    #         pos = i.get_position()
-    #         # x,y,z
-    #         colors = i.get_colors()
-    #         # [R,G,B]
-    #         # orange ball: [1.0, 0.54, 0.08]
-    #         pos_im = i.get_position_on_image()
-            # [x,y] on image coordinates of the detected object
-            # print("position relative to epuck{}, color: {}, position on image: {}, current angle: {}".format(pos, colors, pos_im, current_pose))
     # Process sensor data here.
 
     # Enter here functions to send actuator commands, like:

@@ -3,7 +3,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.0016481586310466425 0.9999972755012986 0.0016530466136798125 1.5695518835902202
-  position 0.24144021933614906 -0.011732478666664395 2.0924434769899407
+  position 0.24149699065519512 -0.055670709443954164 2.1631534581924794
 }
 TexturedBackground {
 }
@@ -90,6 +90,24 @@ Robot {
     E-puck {
       translation 0 0 -0.11
       controller "goal_controller"
+      controllerArgs [
+        "2"
+        "False"
+      ]
+      camera_fieldOfView 1.25
+      camera_width 128
+      camera_height 128
+      camera_recognition Recognition {
+        maxRange 50
+        maxObjects 5
+        frameColor 1 0.54 0.08
+      }
+      groundSensorsSlot [
+        GPS {
+        }
+        Compass {
+        }
+      ]
     }
   ]
   name "Goal 2"
@@ -153,6 +171,24 @@ Robot {
     E-puck {
       translation 0 0 -0.11
       controller "goal_controller"
+      controllerArgs [
+        "1"
+        "False"
+      ]
+      camera_fieldOfView 1.25
+      camera_width 128
+      camera_height 128
+      camera_recognition Recognition {
+        maxRange 50
+        maxObjects 5
+        frameColor 1 0.54 0.08
+      }
+      groundSensorsSlot [
+        Compass {
+        }
+        GPS {
+        }
+      ]
     }
   ]
   name "Goal 2(1)"
@@ -185,6 +221,7 @@ E-puck {
   name "Object Rollier"
   controller "heterogenous_robot"
   controllerArgs [
+    "1"
     "False"
   ]
   camera_fieldOfView 1.25
@@ -197,6 +234,8 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
+    GPS {
+    }
     Compass {
     }
   ]
@@ -206,6 +245,7 @@ E-puck {
   name "Object Rollier(1)"
   controller "heterogenous_robot"
   controllerArgs [
+    "2"
     "False"
   ]
   camera_fieldOfView 1.25
@@ -218,6 +258,8 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
+    GPS {
+    }
     Compass {
     }
   ]
@@ -227,6 +269,7 @@ E-puck {
   name "Object Rollier(2)"
   controller "heterogenous_robot"
   controllerArgs [
+    "3"
     "False"
   ]
   camera_fieldOfView 1.25
@@ -239,6 +282,8 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
+    GPS {
+    }
     Compass {
     }
   ]
@@ -248,6 +293,7 @@ E-puck {
   name "Object Rollier(4)"
   controller "heterogenous_robot"
   controllerArgs [
+    "4"
     "False"
   ]
   camera_fieldOfView 1.25
@@ -260,6 +306,8 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
+    GPS {
+    }
     Compass {
     }
   ]
@@ -269,6 +317,7 @@ E-puck {
   name "Object Rollier(5)"
   controller "heterogenous_robot"
   controllerArgs [
+    "5"
     "False"
   ]
   camera_fieldOfView 1.25
@@ -281,6 +330,8 @@ E-puck {
     frameColor 1 0.54 0.08
   }
   groundSensorsSlot [
+    GPS {
+    }
     Compass {
     }
   ]

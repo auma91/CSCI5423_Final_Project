@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/heterogenous_robot.py" beforeDir="false" afterPath="$PROJECT_DIR$/heterogenous_robot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../worlds/.Main.wbproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../worlds/.Main.wbproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../worlds/Main.wbt" beforeDir="false" afterPath="$PROJECT_DIR$/../../worlds/Main.wbt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,6 +93,7 @@
       <workItem from="1649446534392" duration="4020000" />
       <workItem from="1650321514147" duration="6515000" />
       <workItem from="1650824290302" duration="10226000" />
+      <workItem from="1650998452453" duration="4773000" />
     </task>
     <servers />
   </component>

@@ -8,13 +8,10 @@ orthographicViewHeight: 1
 textFiles: -1
 globalOptionalRendering: CameraFrustums::RangeFinderFrustums
 consoles: Console:All:All
-renderingDevicePerspectives: Goal 2(1):e-puck:camera;0;1;0;0
+renderingDevicePerspectives: Goal 2(1):e-puck:camera;1;1.86719;0;0
 renderingDevicePerspectives: Goal 2:e-puck:camera;0;1;0;0
-renderingDevicePerspectives: Object Rollier(1):camera;1;1;0;0
-renderingDevicePerspectives: Object Rollier(2):camera;0;1;0;0
-renderingDevicePerspectives: Object Rollier(3):camera;0;2.15625;0;0
+renderingDevicePerspectives: Object Rollier(1):camera;0;1;0;0
+renderingDevicePerspectives: Object Rollier(2):camera;0;1.50781;0;0
 renderingDevicePerspectives: Object Rollier(4):camera;0;1.24219;0;0
 renderingDevicePerspectives: Object Rollier(5):camera;0;1.71094;0;0
-renderingDevicePerspectives: Object Rollier(6):camera;0;1;0;0
-renderingDevicePerspectives: Object Rollier(7):camera;0;1.34375;0;0
 renderingDevicePerspectives: Object Rollier:camera;0;1.5625;0.000979432;0.00144928
